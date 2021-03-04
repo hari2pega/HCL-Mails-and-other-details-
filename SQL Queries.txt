@@ -1,0 +1,83 @@
+
+---------5th Highest Sal finding----------------------
+select * from empno, empname,sal from emp 
+ where rownum<=5 order by sal desc;
+----------------------------
+Select * from (select empno,sal,dense_rank() over (order by sal desc) as rk
+ from emp) where rk=5
+----------------------------
+
+
+
+------------------Clustered Index and Non-Clustered Index-----------------
+In Non-Clustered index, index key defines order of data within index. A Clustered index is a type of index in which table records are physically reordered to match the index. 
+A Non-Clustered index is a special type of index in which logical order of index does not match physical stored order of the rows on disk.
+----------------------------------------------
+SELECT 
+    SUM(CASE WHEN Col1 > 0 THEN VALUE ELSE 0 END) POSITIVE,
+    SUM(CASE WHEN VALUE < 0 THEN VALUE ELSE 0 END) NEGATIVE 
+FROM ABC
+-----------------------------------------------------------
+Find out the +ve and -ve values sum from ABC table  
+------------------------------------------------------------
+SELECT SUM(CASE WHEN col > 0 THEN col ELSE 0 END) AS posSum,
+       SUM(CASE WHEN col < 0 THEN col ELSE 0 END) AS negSum
+FROM ABC
+------------------------
+Table :ABC
+
+----
+Col1
+----
+2
+1
+-2
+0
+3
+-1
+4
+-3
+
+Output is:
+--------
+PosSum - 10
+NegSum - 6
+-------------------Animesh Queries---------------------
+Dept wise count foremployees?
+Department name and how many employees in the department in 2020
+Ex:
+A 50
+B 70
+-----
+select count(*) as count,dept.DEPT_NAME 
+from emp 
+inner join dept on emp.DEPT_ID = dept.DEPT_ID 
+where year =2020
+group by dept.DEPT_NAME
+
+----------------------------------------------------------------------------------------------
+Details of employees whose salary is greater than average salary in respective departments:
+----------------------------------------------------------------------------------------------
+select * from emp e, (select dept,avg(sal) avg_sal from emp group by dept) e1
+where e.dept=e1.dept and e.sal > e1.avg_sal and yesr = 2018
+*******************************************************************
+
+Employees whose salary is greater than average salary of their department for the year 2018
+---------------------------------------------------------
+Activity Table --> ACTIVITY_DATE and 
+USERID (Columns)
+--------------------------------------------------------
+SELECT empid
+FROM emp e
+WHERE sal > (SELECT AVG(sal)
+FROM emp e1
+WHERE e.deptno = e1.deptno
+GROUP BY deptno)
+ORDER BY deptno
+--------------------------------------
+Power BI calculate function for the 
+--------------------------------------
+TOTALYTD(CALCULATE(DISTINCTCOUNT(Customer[Customer Key]),USERELATIONSHIP(Cal[Date],Customer[Term Date]),DATEADD(Cal[Date],-1,MONTH)),Cal[Date])
+--------------------
+Month = TOTALYTD(DISTINCTCOUNT([user_id]),Cal[Activity_Date])
+TOTALYTD(CALCULATE(DISTINCTCOUNT(activity[user_id]),USERELATIONSHIP(Cal[Activity_Date]),DATEADD(activity[Date],-1,MONTH)),activity[Date])
